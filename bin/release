@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Automates releasing both the primary gem and the work-safe alias.
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
+
+work_safe_gemspec="no_stuff_in_my_green_dots.gemspec"
+
+if [[ ! -f "$work_safe_gemspec" ]]; then
+  printf "Missing %s; cannot build work-safe gem.\n" "$work_safe_gemspec" >&2
+  exit 1
+fi
+
+version="$(ruby -I lib -rno_shit_in_my_green_dots/version -e 'puts NoShitInMyGreenDots::VERSION')"
+work_safe_gem="pkg/no_stuff_in_my_green_dots-${version}.gem"
+
+mkdir -p pkg
+
+echo "Releasing no_shit_in_my_green_dots v${version}..."
+bundle exec rake release
+
+echo "Building work-safe gem to ${work_safe_gem}..."
+bundle exec gem build "$work_safe_gemspec" --output "$work_safe_gem"
+
+echo "Pushing ${work_safe_gem}..."
+bundle exec gem push "$work_safe_gem"

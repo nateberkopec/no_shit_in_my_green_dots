@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "bundler/gem_tasks"
+require "bundler/gem_helper"
+Bundler::GemHelper.install_tasks name: "no_shit_in_my_green_dots"
 require "rake/testtask"
 
 desc "Run standardrb (lint)"

@@ -54,6 +54,14 @@ group :test do
 end
 ```
 
+If you need a work-safe name, use:
+
+```ruby
+group :test do
+  gem "no_stuff_in_my_green_dots"
+end
+```
+
 ## How it works
 
 For each example/test, STDOUT is redirected to a pipe. If anything other than the test framework's reporter writes to STDOUT during that example/test, the example/test fails with a short dump of the captured output (truncated for very noisy cases). Only suite-wide enablement is supported; per-example toggles are intentionally not provided. STDERR is left alone, and IO objects that were duped from STDOUT *before* enabling the gem may not be caught—point long-lived loggers at `STDOUT`/`$stdout` after enabling if you need them guarded.

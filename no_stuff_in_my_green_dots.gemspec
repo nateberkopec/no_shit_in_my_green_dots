@@ -3,6 +3,6 @@
 require_relative "gemspec_helper"
 
 NoShitInMyGreenDots::GemspecHelper.build(
-  name: "no_shit_in_my_green_dots",
+  name: "no_stuff_in_my_green_dots",
   gemspec_filename: File.basename(__FILE__)
 )

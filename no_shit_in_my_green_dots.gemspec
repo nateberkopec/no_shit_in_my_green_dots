@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "A small helper you drop into spec_helper.rb or test_helper.rb to fail examples that write to STDOUT."
   spec.homepage = "https://github.com/nateberkopec/no_shit_in_my_green_dots"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.2.0"
+  spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/nateberkopec/no_shit_in_my_green_dots"

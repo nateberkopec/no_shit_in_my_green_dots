@@ -1,6 +1,27 @@
 # NoShitInMyGreenDots
 
-Keep your dots green and quiet. This gem fails any test that writes to `STDOUT`, while leaving your test runner's own reporter output alone.
+Are you sick of this?
+
+```
+Run options: --seed 12345
+
+# Running:
+
+.D, [2025-01-20T10:23:45.123456 #12345] DEBUG -- : Redis connected to localhost:6379
+.I, [2025-01-20T10:23:45.234567 #12345]  INFO -- : Processing user #1234
+.[ActiveJob] Enqueued EmailJob (Job ID: abc-123) to Sidekiq(default)
+.HTTP Request: GET /api/users
+..D, [2025-01-20T10:23:45.345678 #12345] DEBUG -- : Cache miss for key: user_1234
+.[Rack::Handler::WEBrick] 127.0.0.1 - - [20/Jan/2025:10:23:45 EST] "GET /health HTTP/1.1" 200
+I, [2025-01-20T10:23:45.456789 #12345]  INFO -- : Background job completed in 0.05s
+..
+
+Finished in 0.012345s, 810.0 runs/s, 810.0 assertions/s.
+
+10 runs, 10 assertions, 0 failures, 0 errors, 0 skips
+```
+
+Now, you can enforce your overly fastidious notions of clean test output on your friends and co-workers!
 
 ```
 Run options: --seed 12345

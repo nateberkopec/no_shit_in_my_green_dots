@@ -26,14 +26,6 @@ module NoShitInMyGreenDots
       @enabled[framework] = true
     end
 
-    def for_minitest!
-      enable!(:minitest)
-    end
-
-    def for_rspec!
-      enable!(:rspec)
-    end
-
     def enabled?(framework = nil)
       return false unless defined?(@enabled)
       return @enabled.values.any? if framework.nil?

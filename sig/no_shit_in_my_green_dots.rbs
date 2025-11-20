@@ -1,4 +1,10 @@
 module NoShitInMyGreenDots
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+  def self.enable!: (?Symbol framework) -> void
+  def self.for_minitest!: () -> void
+  def self.for_rspec!: () -> void
+  def self.enabled?: (?Symbol framework) -> bool
+  def self.capture_stdout: () { () -> untyped } -> String
+  def self.leak_message: (String) -> String
 end

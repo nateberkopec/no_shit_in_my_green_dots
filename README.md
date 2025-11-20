@@ -1,39 +1,38 @@
 # NoShitInMyGreenDots
 
-TODO: Delete this and the text below, and describe your gem
+Keep your dots green and quiet. This gem fails any test that writes to `STDOUT`, while leaving your test runner's own reporter output alone.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/no_shit_in_my_green_dots`. To experiment with that code, run `bin/console` for an interactive prompt.
+```
+Run options: --seed 12345
+
+# Running:
+
+....F.....
+
+Finished in 0.012345s, 810.0 runs/s, 810.0 assertions/s.
+
+  1) STDOUT:
+NoisyTest#test_logs [test/noisy_test.rb:6]:
+Test wrote to STDOUT:
+---
+direct write
+I, [2025-01-01T12:34:56.789012 #1234]  INFO -- : logger write
+child_output
+---
+
+10 runs, 10 assertions, 1 failures, 0 errors, 0 skips
+```
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add the gem to your bundle:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+group :test do
+  gem "no_shit_in_my_green_dots"
+end
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+## How it works
 
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/nateberkopec/no_shit_in_my_green_dots.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+For each example/test, STDOUT is redirected to a pipe. If anything other than the test framework's reporter writes to STDOUT during that example/test, the example/test fails with a short dump of the captured output (truncated for very noisy cases). Only suite-wide enablement is supported; per-example toggles are intentionally not provided. STDERR is left alone, and IO objects that were duped from STDOUT *before* enabling the gem may not be caught—point long-lived loggers at `STDOUT`/`$stdout` after enabling if you need them guarded.

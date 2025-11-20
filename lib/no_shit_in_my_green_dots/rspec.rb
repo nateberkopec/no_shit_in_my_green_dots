@@ -16,9 +16,9 @@ module NoShitInMyGreenDots
 
         ::RSpec.configure do |config|
           config.around do |example|
-            captured_output = NoShitInMyGreenDots.capture_stdout do
-              example.run
-            end
+            matcher = ::RSpec::Matchers::BuiltIn::Output.new(nil).to_stdout_from_any_process
+            matcher.matches?(-> { example.run })
+            captured_output = matcher.instance_variable_get(:@actual).to_s
 
             next if captured_output.nil? || captured_output.empty?
             next if example.exception

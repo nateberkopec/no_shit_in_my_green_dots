@@ -8,50 +8,16 @@ module NoShitInMyGreenDots
   class << self
     def enable!(framework = nil)
       @enabled ||= {}
-      framework ||= detect_framework
-      raise Error, "Could not detect test framework (minitest or rspec). Call enable!(:minitest) or enable!(:rspec)." unless framework
-      return if @enabled[framework]
 
-      case framework
-      when :minitest
-        require_relative "no_shit_in_my_green_dots/minitest"
-        Integrations::Minitest.install!
-      when :rspec
-        require_relative "no_shit_in_my_green_dots/rspec"
-        Integrations::RSpec.install!
-      else
-        raise Error, "Unknown framework #{framework.inspect}"
-      end
-
-      @enabled[framework] = true
+      frameworks = framework ? [framework] : [:rspec, :minitest]
+      frameworks.each { |fw| install_framework(fw) }
     end
 
-    def capture_stdout
-      raise Error, "No block given" unless block_given?
+    def enabled?(framework = nil)
+      return false unless defined?(@enabled)
+      return @enabled.values.any? if framework.nil?
 
-      reader, writer = IO.pipe
-      original_stdout = $stdout.dup
-      original_sync = $stdout.sync
-      captured_output = +""
-      raised_error = nil
-
-      begin
-        $stdout.reopen(writer)
-        $stdout.sync = true
-        yield
-      rescue => e
-        raised_error = e
-      ensure
-        writer.close unless writer.closed?
-        $stdout.reopen(original_stdout)
-        $stdout.sync = original_sync
-        captured_output << reader.read.to_s
-        reader.close
-        original_stdout.close
-      end
-
-      raise raised_error if raised_error
-      captured_output
+      !!@enabled[framework]
     end
 
     def leak_message(output)
@@ -69,26 +35,29 @@ module NoShitInMyGreenDots
 
     private
 
-    def detect_framework
-      return :rspec if defined?(::RSpec)
-      :minitest if defined?(::Minitest)
+    def install_framework(framework)
+      return if @enabled[framework]
+
+      case framework
+      when :rspec
+        require "rspec/core"
+        require_relative "no_shit_in_my_green_dots/rspec"
+        Integrations::RSpec.install!
+      when :minitest
+        require "minitest"
+        require_relative "no_shit_in_my_green_dots/minitest"
+        Integrations::Minitest.install!
+      else
+        raise Error, "Unknown framework #{framework.inspect}"
+      end
+
+      @enabled[framework] = true
+    rescue LoadError
+      # Framework not available; skip install
     end
 
     def auto_enable!
-      framework = detect_framework || try_require_and_detect
-      enable!(framework) if framework
-    end
-
-    def try_require_and_detect
-      require "rspec/core"
-      detect_framework
-    rescue LoadError
-      begin
-        require "minitest"
-        detect_framework
-      rescue LoadError
-        nil
-      end
+      enable!
     end
   end
 end

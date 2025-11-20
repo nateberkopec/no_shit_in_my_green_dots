@@ -21,10 +21,10 @@ module NoShitInMyGreenDots
       module TestExtension
         def run
           result = nil
-          captured_output = NoShitInMyGreenDots.capture_stdout { result = super }
+          stdout, = capture_io { result = super }
 
-          if captured_output && !captured_output.empty?
-            result.failures << StdoutLeak.new(captured_output)
+          unless stdout.nil? || stdout.empty?
+            result.failures << StdoutLeak.new(stdout)
           end
 
           result

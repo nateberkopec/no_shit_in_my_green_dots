@@ -26,13 +26,6 @@ module NoShitInMyGreenDots
       @enabled[framework] = true
     end
 
-    def enabled?(framework = nil)
-      return false unless defined?(@enabled)
-      return @enabled.values.any? if framework.nil?
-
-      !!@enabled[framework]
-    end
-
     def capture_stdout
       raise Error, "No block given" unless block_given?
 

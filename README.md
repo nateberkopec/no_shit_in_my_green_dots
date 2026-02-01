@@ -62,6 +62,11 @@ group :test do
 end
 ```
 
+## Usage
+
+Minitest loads the gem via its plugin system, so you only need the Gemfile entry.
+RSpec users should `require "no_shit_in_my_green_dots"` in `spec_helper.rb`.
+
 ## How it works
 
 For each example/test, STDOUT is redirected to a pipe. If anything other than the test framework's reporter writes to STDOUT during that example/test, the example/test fails with a short dump of the captured output (truncated for very noisy cases). Only suite-wide enablement is supported; per-example toggles are intentionally not provided. STDERR is left alone, and IO objects that were duped from STDOUT *before* enabling the gem may not be caught—point long-lived loggers at `STDOUT`/`$stdout` after enabling if you need them guarded.
